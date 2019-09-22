@@ -37,10 +37,10 @@ void dfsRebcc( int v) {
 }
 // compute the array bcc[], bcc[v] is the biconnected component that contain v
 int ebcc( ) {
-   for (int v = 0; v < MAXN; ++v)
+   for (int v = 1; v <= n ; ++v) //1 indexed vertices
       pre[v] = -1;
    t = cnt = id = 0;
-   for (int v = 1; v < MAXN; ++v)
+   for (int v = 1; v <= n ; ++v)
       if (pre[v] == -1) { 
          pa[v] = v;
          dfsRebcc( v);
