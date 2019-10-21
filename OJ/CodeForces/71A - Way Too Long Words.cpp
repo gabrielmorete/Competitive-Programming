@@ -32,29 +32,19 @@ const int MAXM = 1001000;
 const ll mod=1e9+7;
 const int LMAXN = 25;
 
-int get_odd(int n){
-	int i = 3;
-	while(n>1){
-		n--;
-		i += 2;
-	}
-	return i;
-}
-
 int main(){
 	fastio;
-	int a,b,c,d,e,f;
-	cin>>a>>b>>c>>d>>e>>f;
+	int n;
+	cin>>n;
 
-	if(a==b and b == c and c == d){
-		cout<<6*a*a<<endl;
-		return 0;
+	string s;
+	while (n--) {
+		cin>>s;
+
+		if (s.size() <= 10) {
+			cout<<s<<endl;
+			continue;
+		}
+		cout<<s[0]<<s.size() - 2<<s[s.size() - 1]<<endl;
 	}
-
-	ll ans = 0;
-
-	long double anss = 0;
-	ans = (e + f)*(2*a + b + f) - (e*e + f*f + b*b + c*c)/2;
-	//ans = anss;
-	cout<<ans<<endl;
 }
