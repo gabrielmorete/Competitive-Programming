@@ -35,55 +35,33 @@ const int LMAXN = 25;
 int main(){
 	fastio;
 	string s;
-	cin>>s;
+	int k;
 
-	ll pol[11234], aux[11234], gr;
+	cin>>s>>k;
+	s = s+s;
 
-	bool hmn = (s[0] == 'H'? 1 : 0);
-
-	ms(pol, 0);
-
-	pol[0] = 1;
-	gr = 0;
-
-	for(ll i = 1; i < s.size(); i++) {
-		if((s[i] == 'H' and hmn) or (s[i] == 'A' and !hmn))
-			continue;
-		hmn = (s[i] == 'H'? 1 : 0);
-
-		aux[0] = 0;
-		for(ll j = 0; j <= gr; j++)
-			aux[j + 1] = pol[j];
-
-		for(ll j = 0; j <= gr; j++)
-			aux[j] -= (2ll*i + 1ll)*pol[j];
-
-		gr++;
-
-		for(ll j = 0; j <= gr; j++)
-			pol[j] = aux[j];
-	}
-
-	if (gr == 0) {
-		cout<<0<<endl<<(s[0] == 'H'? 1 : -1)<<endl;
+	vi pos;
+	for (int i = 0; i < s.size(); i++)
+		if (s[i] == 'E')
+			pos.pb(i);
+	if (!pos.size()) {
+		cout<<0<<endl;
 		return 0;
-	}
+	}	
 
-	ll ml = 1;
-	if (gr%2 and s[0] == 'H')
-		ml = -1;
-	if (!(gr%2) and s[0] == 'A')
-		ml = -1;
-	cout<<gr<<endl;
-	
-	bool ok = 0;
-	for (int j = gr; j >= 0; j--) {
-		if (ok)
-			cout<<' ';
-		cout<<pol[j]*ml;
-		ok = 1;
-	}
-	gnl;
+	ll ans = 0;
+	for (int i = 0; i < s.size()/2; i++) {
+		if (s[i] == 'E')
+			ans += k;
+		else {
+			auto it = lower_bound( all(pos), i);
+			int p = *it;
 
+			if (p > i + k - 1)
+				continue;
+			ans += i + k - p;
+		}
+	}
+	cout<<ans<<endl;
 
 }
