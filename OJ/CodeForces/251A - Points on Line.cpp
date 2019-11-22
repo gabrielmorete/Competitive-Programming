@@ -35,10 +35,9 @@ const int LMAXN = 25;
 int main(){
 	fastio;
 	ll n, d;
-	vector<ll> v;
-
+	vi v;
 	cin>>n>>d;
-	
+
 	ll x;
 	fr(i,n){
 		cin>>x;
@@ -46,33 +45,16 @@ int main(){
 	}
 
 	ll ans = 0;
-	for(int i = 0; i < n - 2; i++) {
 
+	fr(i,n - 2){
 		auto it = lower_bound(all(v), v[i] + d);
-		ll dst = distance(v.begin(),it);
-		
-		//cout<<i<<' '<<dst<<endl;
 
-		if (it == v.end()){
-			dst--;
-			dst -= i;
-			ans += dst*(dst-1)/2;
-			
-		}
-		else if (*it > (v[i] + d)){
-			dst--;
-			if (dst - i >= 2) {
-				dst -= i;
-				ans += dst*(dst-1)/2;
-			}
-		}
-		else {
-			if (dst - i >= 2) {
-				dst -= i;
-				ans += dst*(dst-1)/2;
-			}
-		}
+		if(it == v.end() or *(it) > v[i] + d)
+			it--;
+		ll p = (int)(it - v.begin());
+		p -= i + 1;
+
+		ans +=(p*(p+1))/2;
 	}
 	cout<<ans<<endl;
-
 }
