@@ -7,54 +7,51 @@ const int MAXN = 100100;
 vector< pair<int,int> > adj[MAXN], adjbcc[MAXN];
 int pre[MAXN], lo[MAXN], pa[MAXN], stk[MAXN];
 int n, m;
-int t, cnt, id;
+int sn, clk, id;
 int bcc[MAXN];
 
 void dfsRebcc( int v) {
-	pre[v] = cnt++;
-	stk[t++] = v;
+	pre[v] = clk++;
+	stk[sn++] = v;
 	lo[v] = pre[v];
-	for (pair<int,int> x : adj[v]) {
+	for (auto x : adj[v]) {
 		int  w = x.fst;
 		if (pre[w] == -1) { 
 			pa[w] = v; 
 			dfsRebcc( w); 
-			if (lo[w] < lo[v]) 
-			lo[v] = lo[w]; 
-			} else { 
-		if (w != pa[v] && pre[w] < lo[v]) 
-			lo[v] = pre[w]; 
+			lo[v] = min( lo[v], lo[w]);
 		} 
+		else if (w != pa[v]) 
+			lo[v] = min( lo[v], pre[w]); 
 	} 
-		if (lo[v] == pre[v]) { 
-			int u;
+	if (lo[v] == pre[v]) { 
+		int u;
 		do {
-			u = stk[--t];
+			u = stk[--sn];
 			bcc[u] = id;
 		} while (u != v);
-	id++;
-	}
-}
-// compute the array bcc[], bcc[v] is the biconnected component that contain v
-int ebcc( ) {
-   for (int v = 1; v <= n ; ++v) //1 indexed vertices
-      pre[v] = -1;
-   t = cnt = id = 0;
-   for (int v = 1; v <= n ; ++v)
-      if (pre[v] == -1) { 
-         pa[v] = v;
-         dfsRebcc( v);
-      }
-   return id;
-}
-//build the graph of biconnected components
-void build_ebcc_graph() {
-	for (int v = 0; v < n; v++)
-		for (pair<int,int> x : adj[v]){
-			if (bcc[v] != bcc[x.fst])
-				adjbcc[bcc[v]].push_back({bcc[x.fst], x.snd});
-			//A bridge becomes an edge with the same cost in the new graph
+		id++;
 	}
 }
 
-//Inspiration and Credits : https://www.ime.usp.br/~pf/algoritmos_para_grafos/index.html
+// compute the array bcc[], bcc[v] is the biconnected component that contain v
+int ebcc() {
+	for (int v = 0; v < n; v++) // 0 indexed
+		pre[v] = -1;
+	sn = clk = id = 0;
+	for (int v = 0; v < n; v++)
+		if (pre[v] == -1) { 
+			pa[v] = v;
+			dfsRebcc( v);
+		}
+	return id;
+}
+
+//build the graph of biconnected components
+void build_ebcc_graph() {
+	for (int v = 0; v < n; v++)
+		for (auto x : adj[v])
+			if (bcc[v] != bcc[x.fst])
+				adjbcc[bcc[v]].push_back({bcc[x.fst], x.snd});
+			//A bridge becomes an edge with the same cost in the new graph
+}
