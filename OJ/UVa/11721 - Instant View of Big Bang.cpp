@@ -33,7 +33,6 @@ int n, m, vis[MAXN], dist[MAXN];
 bool ans[MAXN];
 vii adj[MAXN];
 
-
 bool bellman(){
 	fill(ans, ans + n, 0);
 	fill(dist, dist + n, INF);
@@ -58,29 +57,6 @@ bool bellman(){
 	return ok;
 }
 
-int deg[MAXN];
-void toposort(){
-	fill(deg, deg + n, 0);
-	queue<int> fila;
-	fr(i, n)
-		for (auto x : adj[i])
-			deg[x.fst]++;
-	fr(i, n)
-		if (deg[i] == 0)
-			fila.push(i);
-	int a;
-	while (!fila.empty()){
-		a = fila.front();
-		fila.pop();
-		for (auto x : adj[a]){
-			deg[x.fst]--;
-			if (deg[x.fst] == 0)
-				fila.push(x.fst);
-		}
-		adj[a].clear();			
-	}			
-}
-
 void solve(){	
 	cin>>n>>m;
 
@@ -92,8 +68,6 @@ void solve(){
 		cin>>a>>b>>c;
 		adj[b].pb({a, c}); // Reverse
 	}
-
-	toposort();
 
 	if (bellman()){
 	
