@@ -1,23 +1,30 @@
+// Edomonds Blosssom
+// acha máximo emparelhamento em grafos simples arbitrarios
+// complexidade : O(EV^2)
+// arestas são guardadas como uma lista ligada
+// adj[v] é a primeira aresta, percorrer até 0 (e = nxt[e])
+
 #include <bits/stdc++.h>
 using namespace std;
-const int M = 500; //Vertex set max size
-struct struct_edge{
-	int v;
-	struct_edge* n;
-};
-typedef struct_edge* edge;
-struct_edge pool[M*M*2];
-edge top = pool,adj[M];
-int V, E, match[M], st, en, q[M], pai[M], base[M];
-bool inq[M], inb[M], ed[M][M];
 
-void add_edge(int u, int v){
-	top->v = v, top->n = adj[u], adj[u] = top++;
-	top->v = u, top->n = adj[v], adj[v] = top++;
+const int MAXN = 500;
+int ned = 1, adj[MAXN], to[2 * MAXN * MAXN], nxt[2 * MAXN * MAXN];
+int n, m, st, en; // n # de vértices, m # de arestas
+int match[MAXN], pai[MAXN], base[MAXN], q[MAXN]; // match[i] = v, (i, v) estão emparelahdos (ou -1)
+bool inq[MAXN], inb[MAXN];
+
+void init(){ // limpa o grafo
+	ned = 1;
+	fill(adj, adj + n, 0);
 }
 
-int LCA(int root, int u, int v){
-	static bool inp[M];
+void add_edge(int u, int v){ // adicionar aresta uv
+	to[ned] = u, nxt[ned] = adj[v], adj[v] = ned++;
+	to[ned] = v, nxt[ned] = adj[u], adj[u] = ned++;	
+}
+
+int find_lca(int root, int u, int v){
+	static bool inp[MAXN];
 	memset(inp, 0, sizeof(inp));
 	while (1){
 		inp[u = base[u]] = true;
@@ -43,15 +50,15 @@ void mark_blossom(int lca, int u) {
 }
 
 void blossom_contraction(int s, int u, int v) {
-	int lca = LCA(s,u,v);
 	memset(inb, 0, sizeof(inb));
+	int lca = find_lca(s, u, v);
 	mark_blossom(lca, u);
 	mark_blossom(lca, v);
 	if (base[u] != lca)
 		pai[u] = v;
 	if (base[v] != lca)
 		pai[v] = u;
-	for (int u = 0; u < V; u++)
+	for (int u = 0; u < n; u++)
 		if (inb[base[u]]){
 			base[u] = lca;
 			if (!inq[u])
@@ -61,7 +68,7 @@ void blossom_contraction(int s, int u, int v) {
 
 void augment_path( int t) {
 	int x, w;
-	do {
+	do{
 		x = pai[t];
 		w = match[x];
 		match[x] = t;
@@ -70,18 +77,18 @@ void augment_path( int t) {
 	} while (t != -1);
 }
 
-bool find_augmenting_path(int s) {
+bool find_augmenting_path(int s){
 	memset(inq, 0, sizeof(inq));
 	memset(pai, -1, sizeof(pai));
-	for (int i = 0; i < V; i++) 
+	for (int i = 0; i < n; i++) 
 		base[i] = i;
 	st = en = 0;
 	q[en++] = s;
 	inq[s] = true;
 	while (st < en){
 		int u = q[st++];
-		for (edge e = adj[u]; e ;e = e->n) {
-			int v = e->v;
+		for (int e = adj[u]; e != 0; e = nxt[e]){
+			int v = to[e];
 			if (base[u] != base[v] && match[u] != v){
 				if ((v == s)||(match[v] != -1 && pai[match[v]] != -1))
 					blossom_contraction(s, u, v);
@@ -97,22 +104,17 @@ bool find_augmenting_path(int s) {
 			}	
 		}
 	}
-return false;
+	
+	return false;
 }
 
 int blossom(){
 	int matchc = 0;
 	memset(match, -1, sizeof(match));
-	for (int u = 0; u < V; u++)
-	if (match[u] ==-1 && find_augmenting_path(u))
-		matchc++;
-	return matchc;
+	for (int v = 0; v < n; v++)
+		if (match[v] == -1 && find_augmenting_path(v))
+			matchc++;
+	return matchc; // cardinalidade do emparelhamento
 }
-
-// V -> number of vertices, E -> number of edges
-// use add_edge(u,v) to add edge.
-// blossom() returns the value of the matching
-// the matching is stored in matching[]
-// O(EV^2)
 
 // Based (almost a copy) from : https://codeforces.com/blog/entry/49402
