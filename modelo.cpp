@@ -25,7 +25,6 @@ typedef vector<pii> vii;
 const int INF = 0x3f3f3f3f;
 const ll llINF = (long long)(1e18) + 100;   
 const int MAXN = 1e5 + 10;
-const ll mod=1e9+7;
 
 int32_t main(){
 	fastio;
