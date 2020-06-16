@@ -1,15 +1,15 @@
-//Code for bridges and cut vertex
+// Algoritmo para pontes e vertices de corte
+// complexidade : O(n + m)
 
 #include "bits/stdc++.h"
 using namespace std;
 
-//vertex input size
-const int MAXN = 100100;
+const int MAXN = 1e5 + 1;
 
-vector<int> adj[MAXN];
-int pre[MAXN], lo[MAXN], pa[MAXN], cut[MAXN];
 int clk, n, m;
-map <pii, bool> bridge;
+int pre[MAXN], lo[MAXN], pa[MAXN], cut[MAXN]; // cut[v] = 1 se v é de corte
+vector<int> adj[MAXN];
+map <pii, bool> bridge; // bridge[{u, v}] = 1 de uv é ponte
 
 void dfsRbc( int v) {
 	pre[v] = lo[v] = clk++;

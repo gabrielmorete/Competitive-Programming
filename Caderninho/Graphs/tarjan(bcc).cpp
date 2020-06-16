@@ -1,15 +1,14 @@
-// Tarjan's algorithm for BCC
+// Algoritmo de Tarjan para BCC
+// complexidade : O(n + m)
+
 #include "bits/stdc++.h"
 using namespace std;
 
-//vertex input size
-const int MAXN = 100100;
+const int MAXN = 1e5 + 10;
 
+int n, m, sn, clk, id;
+int pre[MAXN], lo[MAXN], pa[MAXN], stk[MAXN], bcc[MAXN]; // bcc[v] é a componente biconexa de v
 vector< pair<int,int> > adj[MAXN], adjbcc[MAXN];
-int pre[MAXN], lo[MAXN], pa[MAXN], stk[MAXN];
-int n, m;
-int sn, clk, id;
-int bcc[MAXN];
 
 void dfsRebcc( int v) {
 	pre[v] = clk++;
@@ -35,7 +34,6 @@ void dfsRebcc( int v) {
 	}
 }
 
-// compute bcc[], bcc[v] is the biconnected component that contain v
 int ebcc() {
 	for (int v = 0; v < n; v++) // 0 indexed
 		pre[v] = -1;
@@ -48,11 +46,11 @@ int ebcc() {
 	return id;
 }
 
-//build bcc graph
+// Monta arvore de BCC
 void build_ebcc_graph() {
 	for (int v = 0; v < n; v++)
 		for (auto x : adj[v])
 			if (bcc[v] != bcc[x.fst])
 				adjbcc[bcc[v]].push_back({bcc[x.fst], x.snd});
-			//A bridge becomes an edge with the same cost in the new graph
+			// ponte vira uma aresta de mesmo custo na árvore
 }

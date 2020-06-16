@@ -1,16 +1,15 @@
-// Tarjan's algorithm for SCC
+// Algoritmo de Tarjan para SCC
+// complexidade : O(n + m)
+
 #include "bits/stdc++.h"
 using namespace std;
 
 const int INF = 0x3f3f3f3f;
+const int MAXN = 1e5 + 10;
 
-// vertex input size
-const int MAXN = 100100;
-
+int n, clk, sn, id;
+int pre[MAXN], lo[MAXN], stk[MAXN], scc[MAXN]; // scc[v] é a componente forte de v
 vector<int> adj[MAXN], adjscc[MAXN];
-int pre[MAXN], lo[MAXN], stk[MAXN], scc[MAXN];
-int clk, sn, id;
-int n;
 
 void dfsRscc( int v) {
 	pre[v] = lo[v] = clk++;
@@ -31,7 +30,6 @@ void dfsRscc( int v) {
 	}
 }
 
-// Compute scc[], scc[v] is the strong connected component that contain v
 int tarjan() {
 	for (int v = 0; v < n; v++)
 		pre[v] = -1;
@@ -42,7 +40,7 @@ int tarjan() {
 	return id;	
 }
 
-// Build scc graph
+// Constoi arvore das scc
 void build_scc_graph() {
 	for (int v = 0; v < n; v++)
 		for (auto x : adj[v])
