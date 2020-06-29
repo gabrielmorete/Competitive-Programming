@@ -24,76 +24,71 @@ typedef vector<pii> vii;
 
 const int INF = 0x3f3f3f3f;
 const ll llINF = (long long)(1e18) + 100;   
+const int MAXN = 1e5 + 10;
 
-#define MAXN 103000
-#define MAXM 900000
+vector<int> adju[MAXN];
+int matchu[MAXN], matchv[MAXN], coveru[MAXN], coverv[MAXN]; 
+int dist[MAXN], q[MAXN];
+int m, n;
 
-int ned, first[MAXN], work[MAXN], dist[MAXN], q[MAXN];
-int cap[MAXM], to[MAXM], nxt[MAXM];
-
-void init() {
-   memset(first, -1, sizeof first);
-   ned = 0;
-}
-
-void add(int u, int v, int f) {
-	to[ned] = v, cap[ned] = f;
-	nxt[ned] = first[u];
-	first[u] = ned++;
-	
-	to[ned] = u, cap[ned] = 0;
-	nxt[ned] = first[v];
-	first[v] = ned++;
-}
-
-int dfs(int u, int f, int t) {
-	if (u == t) return f;
-	for (int &e = work[u]; e != -1; e = nxt[e]) {
-		int v = to[e];
-		if (dist[v] == dist[u] + 1 && cap[e] > 0) {
-			int df = dfs(v, min(f, cap[e]), t);
-			if (df > 0) {
-				cap[e] -= df;
-				cap[e^1] += df;
-				return df;
-			}
-		}
-	}
-	return 0;
-}
-
-bool bfs(int s, int t) {
-	memset(&dist, -1, sizeof dist);
-	dist[s] = 0;
+bool bfs(){
 	int st = 0, en = 0;
-	q[en++] = s;
+	for (int u = 1; u <= m; u++) {
+		if (matchu[u] == 0) {
+			dist[u] = 0; 
+			q[en++] = u;
+		}
+		else dist[u] = INF;
+	}
+	dist[0] = INF;
 	while (en > st) {
 		int u = q[st++];
-		for (int e = first[u]; e!=-1; e = nxt[e]) {
-			int v = to[e];
-			if (dist[v] < 0 && cap[e] > 0) {
-				dist[v] = dist[u] + 1;
-				q[en++] = v;
+		if (dist[u] >= dist[0]) 
+			continue;
+		for (int v : adju[u]) {
+			if (dist[matchv[v]] == INF) {
+				dist[matchv[v]] = dist[u] + 1;
+				q[en++] = matchv[v];
 			}
 		}
 	}
-	return dist[t] >= 0;
+
+	return (dist[0] != INF);
 }
 
-int dinic(int s, int t) {
-	int flow = 0, f;
-	while (bfs(s, t)) {
-		memcpy(work, first, sizeof work);
-		while (f = dfs(s, INF, t)) 
-			flow += f;
+bool dfs(int u){
+	if (u == 0) return true;
+	for (int v : adju[u]){
+		if (dist[matchv[v]] == dist[u] + 1){
+			if (dfs(matchv[v])){
+				matchv[v] = u; 
+				matchu[u] = v;
+				return true;
+			}
+		}
 	}
-	return flow;
+	dist[u] = INF;
+	return false;
+}
+
+int hopcroftKarp() {
+	memset(&matchu, 0, sizeof matchu);
+	memset(&matchv, 0, sizeof matchv);
+	int result = 0;
+	while (bfs()){
+		for (int u = 1; u <= m; u++) {
+			if (matchu[u] == 0 and dfs(u))
+				result++;
+		}
+	}
+
+	return result;
 }
 
 
 int mx[4] = {1, -1, 0, 0};
 int my[4] = {0, 0, 1, -1};
-int r, c;
+int r, c, id[50][50];
 char mapa[50][50];
 
 bool valid(int x, int y){
@@ -124,8 +119,6 @@ void dfs_fill(int x, int y){
 int32_t main(){
 	fastio;
 
-	init();
-
 	cin>>r>>c;
 
 	string s;
@@ -143,34 +136,31 @@ int32_t main(){
 				ans++;
 			}
 
-	int src, snk; 
-	src = r * c + 1;
-	snk = src + 1;		
-
-	int aux = 0;
-
+	n = m = 0;		
+	
 	int x, y;
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++){
 			if (mapa[i][j] != 'C')
 				continue;
 
-			aux++;
-
 			if ((i + j) % 2){
-				add(src, i * c + j, 1);
+				m++;
 				fr(k, 4){
 					x = i + mx[k];
 					y = j + my[k];
-					if (valid(x, y))
-						add(i * c + j, x * c + y, 1);
+					if (valid(x, y) and mapa[x][y] == 'C'){
+						if (id[x][y] == 0)
+							id[x][y] = ++n;
+						adju[m].pb(id[x][y]);
+					}
 				}
 			}
-			else
-				add(i * c + j, snk, 1);
-		}
+			else if (id[i][j] == 0)
+				id[i][j] = ++n;
+	}
 
-	aux -= dinic(src, snk);	
-
-	cout<<ans + aux<<endl;			
+	ans += m + n - hopcroftKarp();
+	
+	cout<<ans<<endl;			
 }
