@@ -28,7 +28,7 @@ const int MAXN = 1e5 + 10;
 int n, m, k;
 vi adj[MAXN];
 
-int cic, pai[MAXN], dist[MAXN];
+int bst, ini, fim, pai[MAXN], dist[MAXN];
 
 void dfs1(int v, int p, int dst){
 	pai[v] = p;
@@ -36,32 +36,17 @@ void dfs1(int v, int p, int dst){
 	for (int x : adj[v]){
 		if (x != p){
 			if (dist[x] > 0){ // achei ciclo
-				cic = v;
+				if (abs(dist[v] - dist[x]) < bst){
+					bst = abs(dist[v] - dist[x]);
+					fim = x;
+					ini = v;
+				}
 			}
 			else
 				dfs1(x, v, dst + 1);
 		}
 	}
 }
-
-int bst, ini, fim;
-
-void dfs2(int v, int p, int dst){
-	pai[v] = p;
-	dist[v] = dst;
-	for (int x : adj[v]){
-		if (x != p){
-			if (dist[x] == 0)
-				dfs2(x, v, dst + 1);
-			else if (abs(dist[v] - dist[x]) < bst){
-				bst = abs(dist[v] - dist[x]);
-				fim = x;
-				ini = v;
-			}
-		}
-	}
-}
-
 
 int32_t main(){
 	fastio;
@@ -74,9 +59,11 @@ int32_t main(){
 		adj[b].pb(a);
 	}
 
+	ini = fim = 0;
+	bst = n + 10;
 	dfs1(1, 1, 1);
 
-	if (cic == 0){ // é arovre
+	if (ini == 0){ // é arovre
 		int od = 0;
 		frr(i, n)
 			if (dist[i] % 2 == 1)
@@ -97,9 +84,6 @@ int32_t main(){
 		return 0;
 	}
 	else{
-		fill(dist, dist + MAXN, 0);
-		bst = n + 10;
-		dfs2(cic, cic, 1);
 
 		if (dist[ini] < dist[fim])
 			swap(ini, fim);
