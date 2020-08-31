@@ -92,23 +92,24 @@ int dinic(int s, int t) {
 	return result;
 }
 
-
-void solve( int n, int m, int g) {
-
-	int gms[111][111], pnts[111];
-	fr(i,111) 
-		fr(j,111) 
-			gms[i][j] = m;
+void solve(int n, int m, int g) {
+	init(); // zera a rede do dinic
+	int gms[40][40]; // jogos que faltam entre i e j
+	int pnts[40]; // pontos do time j
 	
-	fr(i,111) pnts[i] = 0;
+	fr(i, 40) 
+		fr(j, 40) 
+			gms[i][j] = m; 
+	
+	fr(i, 40) 
+		pnts[i] = 0;
 
-	init();
-
-	fr(i,n) gms[i][i] = 0;
+	fr(i, n) 
+		gms[i][i] = 0;
 
 	int src, snk;
-	src = 100;
-	snk = 101;
+	src = 80;
+	snk = 81;
 
 	int a, b;
 	string s;
@@ -117,31 +118,25 @@ void solve( int n, int m, int g) {
 		if(s == "="){
 			pnts[a]++;
 			pnts[b]++;
-			gms[a][b]--;
-			gms[b][a]--;
 		}
-		else{
-
+		else
 			pnts[b] += 2;
-			gms[a][b]--;
-			gms[b][a]--;			
-
-		}
+		gms[a][b]--;
+		gms[b][a]--;
 	}
 
 
-	frr(i,n-1)
-		if(gms[0][i]){
-			pnts[0] += 2*gms[0][i];
+	frr(i, n - 1)
+		if(gms[0][i]){ // time zero ganha o máximo possível
+			pnts[0] += 2 * gms[0][i];
 			gms[0][i] = 0;
 			gms[i][0] = 0;
 		}
 
-	frr(i, n-1){
-		if(pnts[0] > pnts[i]){
-			add( 50 + i, snk, pnts[0] - pnts[i] - 1);
-		}
-		else{
+	frr(i, n - 1){
+		if(pnts[0] > pnts[i])
+			add( n + i, snk, pnts[0] - pnts[i] - 1); // fica com no maximo pnts[0] - 1 pontos
+		else{ // time i já tem mais pontos que 0 com as vitórias que tem
 			cout<<'N'<<endl;
 			return;
 		}
@@ -151,20 +146,19 @@ void solve( int n, int m, int g) {
 	int falta;
 	for (int i = 1; i < n; i++){
 		falta = 0;
-		for (int j = i + 1; j < n; j++) {
-			for (int k = 0; k < gms[i][j]; k++) {
+		for (int j = i + 1; j < n; j++) { // i < j para não duplicar os jogos
+			for (int k = 0; k < gms[i][j]; k++) { // adiciona os jogos
 				falta += 2;
-				add( i, 50 + i, 2);
-				add( i, 50 + j, 2);
+				add( i, n + i, 2);
+				add( i, n + j, 2);
 			}
 		}
 		if(falta)
-			add( src, i, falta);
+			add(src, i, falta);
 		tot += falta;
 	}
 
-	int mf = dinic( src, snk);	
-	if (mf >= tot)
+	if (dinic( src, snk) >= tot) //consiguiu distribuir os pontos de acordo
 		cout<<'Y'<<endl;
 	else
 		cout<<'N'<<endl;
@@ -178,5 +172,4 @@ int main(){
 		solve( n, m, g);
 		cin>>n>>m>>g;
 	}	
-
 }
