@@ -1,114 +1,83 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-#define fr(i,n)     for(int i=0;i<n;i++)
-#define frr(i,n)    for(int i=1;i<=n;i++)
+const int MAXN = 1e2 + 10;
 
-#define gnl cout << endl
-#define fastio ios_base::sync_with_stdio(false); cin.tie(NULL)
-
-const int INF = 0x3f3f3f3f;
-const int MAXN = 1e5 + 10;
-
-vector<int> adju[MAXN]; // adj da partição U
-int matchu[MAXN], matchv[MAXN], coveru[MAXN], coverv[MAXN]; 
-int dist[MAXN], q[MAXN];
+vector<int> adju[MAXN];
+int matchu[MAXN], matchv[MAXN], coverv[MAXN], coveru[MAXN];
+int vis[MAXN], iter;
 int m, n;
 
+bool dfs(int u){
+    vis[u] = iter;
+    if (u == 0) return true;
+   	for (int &v : adju[u]){
+        if (vis[matchv[v]] < iter and dfs(matchv[v])){
+            matchv[v] = u; 
+            matchu[u] = v;
+            return true;
+        }
+    }
+    return false;
+}
+
 void min_cover(){
+	iter++;
+	for (int u = 1; u <= m; u++)
+		if (matchu[u] == 0)
+			dfs(u);
 	for (int u = 1; u <= m; u++){
 		coveru[u] = false;
-		if (dist[u] == INF)
+		if (vis[u] < iter)
 			coveru[u] = true;	
 	}	
 	for (int v = 1; v <= n; v++){
 		coverv[v] = false;
-		if (dist[matchv[v]] != INF)
+		if (vis[matchv[v]] == iter)
 			coverv[v] = true;
 	}	
 }
 
-bool bfs(){
-	int st = 0, en = 0;
-	for (int u = 1; u <= m; u++){
-		if (matchu[u] == 0){
-			dist[u] = 0; 
-			q[en++] = u;
-		}
-		else dist[u] = INF;
-	}
-	dist[0] = INF;
-	while (en > st){
-		int u = q[st++];
-		if (dist[u] >= dist[0]) 
-			continue;
-		for (int v : adju[u]){
-			if (dist[matchv[v]] == INF){
-				dist[matchv[v]] = dist[u] + 1;
-				q[en++] = matchv[v];
-			}
-		}
-	}
-
-	return (dist[0] != INF);
-}
-
-bool dfs(int u){
-	if (u == 0) return true;
-	for (int v : adju[u]){
-		if (dist[matchv[v]] == dist[u] + 1){
-			if (dfs(matchv[v])){
-				matchv[v] = u; 
-				matchu[u] = v;
-				return true;
-			}
-		}
-	}
-	dist[u] = INF;
-	return false;
-}
-
-int hopcroftKarp(){
-	memset(&matchu, 0, sizeof matchu);
-	memset(&matchv, 0, sizeof matchv);
-	int result = 0;
-	while (bfs()){
-		for (int u = 1; u <= m; u++){
-			if (matchu[u] == 0 and dfs(u))
-				result++;
-		}
-	}
-	min_cover();
-	return result;
+int kuhn(){
+    memset(&matchu, 0, sizeof matchu);
+    memset(&matchv, 0, sizeof matchv);
+ 	iter = 0;
+    int result = 0;
+    for (int u = 1; u <= m; u++){
+        iter++;
+        if (matchu[u] == 0 and dfs(u)) 
+        	result++;
+    }
+    min_cover();
+    return result;
 }
 
 int main(){
-	fastio;
-	int madj[112][112];
+	int madj[MAXN][MAXN];
 
 	cin>>m;
 	n = m;
 
-	frr(i,n)
-		frr(j,n)
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++)
 			cin>>madj[i][j];
 
-	frr(k,n)
-		frr(i,n)
-			frr(j,n)
+	for (int k = 1; k <= n; k++) // compute transitive closure
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++)
 				madj[i][j] |= madj[i][k] & madj[k][j];
 
-	frr(i,n)
-		frr(j,n)
+	for (int i = 1; i <= n; i++) // build bip graph of dilworth's theorem
+		for (int j = 1; j <= n; j++)
 			if (madj[i][j] and i != j)
 				adju[i].push_back(j);
 
-	cout<<n - hopcroftKarp()<< endl;			
+	cout<<(n - kuhn())<< endl; // size of longest antichain			
 
-	for (int i = 1; i <= n; i++)
+	for (int i = 1; i <= n; i++) // both copies aren't in min cover
 		if (coveru[i] == 0 and coverv[i] == 0)
 			cout<<i<<' ';
-	gnl;	
+	cout<<endl;	
 }
 
 // My old solution using dinitz's algorithm 
