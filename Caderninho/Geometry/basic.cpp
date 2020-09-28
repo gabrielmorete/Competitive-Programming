@@ -138,8 +138,8 @@ vector<point> get_intsec(segment p, segment q){ // returns intersection points/s
 		return {(p.getline()).get_intsec(q.getline())};
 }
 
-// check if a is conteined in pol, pol must be in clockwise order
-bool pol_contain(vector<point> &pol, point a){
+// check if a is conteined in polygon in O(log(n))
+bool pol_contain(vector<point> &pol, point a){ // pol must be in clockwise order
 	int r = pol.size() - 1, l = 1, meio;
 	while (r - l > 1){
 		meio = (r + l) / 2;
