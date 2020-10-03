@@ -1,4 +1,4 @@
-// PD da árvore de Steiner
+// PD para árvore de Steiner
 // complexidade : O(2**n * n**2 + 3**n * n)
 
 #include "bits/stdc++.h"
@@ -9,7 +9,7 @@ const int MAXN = 1e3 + 10;
 const int NTERM = 10;
 
 int memo[1<<NTERM][MAXN]; // memo[mask][v] custo da árvore de steiner
-						  // conectando vértices da mask com raiz v
+			  // conectando vértices da mask com raiz v
 
 int steiner_pd(){
 	memset(memo, INF, sizeof memo);
@@ -32,7 +32,7 @@ int steiner_pd(){
 				memo[mask][u] = min(memo[mask][u], memo[mask][v] + dist(u, v));
 		}
 
-	int ans = *get_min(memo[(1<<k) - 1], memo[(1<<k) - 1] + n); // menor custo que cobre todos os vértices
+	int ans = *get_min(memo[(1<<k) - 1], memo[(1<<k) - 1] + n); // menor custo que conecta todos os terminais
 
 	return ans;	
 }
