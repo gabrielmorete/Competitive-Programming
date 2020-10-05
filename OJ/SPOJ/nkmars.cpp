@@ -21,14 +21,17 @@ typedef vector<pii> vii;
 
 const int INF = 0x3f3f3f3f;
 const ll llINF = (long long)(1e18) + 100;   
-const int MAXN = 3e4 + 10;
+const int MAXN = 5e4 + 10;
+
+
+#define int ll
 
 int top[MAXN], bot[MAXN];
 
 int lazy[4 * MAXN];
-pii seg[4 * MAXN];
+pair<ll, ll> seg[4 * MAXN];
 
-pii combine(pii b, pii c){
+pair<ll, ll> combine(pii b, pii c){
 	pii ans;
 	if (b.fst == c.fst){
 		ans = b;
@@ -78,11 +81,11 @@ void modfy(int node, int l, int r, int ql, int qr, int val){
 	int meio = (l + r)/2;
 
 	modfy(node<<1, l, meio, ql, qr, val);
-	modfy(node<<1|1, meio +1, r, ql, qr, val);
+	modfy(node<<1|1, meio + 1, r, ql, qr, val);
 	seg[node] = combine(seg[node<<1], seg[node<<1|1]);
 }
 
-pii query(int node, int l, int r, int ql, int qr){
+pair<ll, ll> query(int node, int l, int r, int ql, int qr){
 	unlazy(node, l, r);
 	if (r < ql or qr < l)
 		return {INF, 0};
@@ -108,8 +111,8 @@ int32_t main(){
 		cin>>x1>>y1>>x2>>y2; // bottom l top r
 		event.pb({x1, 0, i});
 		event.pb({x2, 1, i});
-		top[i] = y2;
-		bot[i] = y1;
+		top[i] = y2 + 1;
+		bot[i] = y1 + 1;
 	}
 
 	sort(all(event));
@@ -118,14 +121,16 @@ int32_t main(){
 
 	int x, typ, id, p = 0;
 	int xx, ttyp;	
-	int lst = -1, ans = 0;
+	int lst = 0, ans = 0;
 	
 	while (p < (int)event.size()){
 		tie(x, typ, id) = event[p];
+		
 		xx = x;
 		ttyp = typ;
 
 		int dy = MAXN - seg[1].snd;
+
 		ans += (x - lst) * dy;
 		lst = x;
 
@@ -144,6 +149,8 @@ int32_t main(){
 			modfy(1, 1, MAXN, bot[id], top[id] - 1, -1);
 			if (p < ((int)event.size()) - 1)
 				tie(xx, ttyp, id) = event[++p];
+			else 
+				break;
 		}
 	}
 
