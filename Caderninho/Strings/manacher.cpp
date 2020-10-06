@@ -40,3 +40,5 @@ void manacher(string &s){
 	for (int i = 0; i < tam - 1; i++)
 		pal[2 * i + 1] = 2 * d2[i + 1];
 }
+
+// # total de palindromos = d1[1] + ...+ d1[n] + d_2[i] + ... + d[n - 1]
