@@ -16,7 +16,6 @@ struct point {
 	inline point operator*(coord o){ return {x * o, y * o}; }
 	inline point operator/(coord o){ return {x / o, y / o}; }
 	inline void operator=(point p){ x = p.x, y = p.y; }
-	inline bool operator==(point p){return sign(x - p.x) == 0 and sign(y - p.y) == 0; }
 
 	inline coord operator*(point p){ return x * p.x + y * p.y; } // |a||b|cos(tht)
 	inline coord operator^(point p){ return x * p.y - y * p.x; } // |a||b|sin(tht), this -> p
@@ -29,6 +28,9 @@ struct point {
 	inline point rot90(){return {-y, x}; }
 	inline point rot(long double ang){ return {cos(ang) * x - sin(ang) * y, sin(ang) * x + cos(ang) * y}; }
 	inline point project(point p){return p * (((*this) * p)/p.norm2()); }
+
+	inline bool operator<(point &p){ return sign(x - p.x) != 0 ? sign(x - p.x) < 0 : sign(y - p.y) < 0; } // lex_sort
+	inline bool operator==(point p){ return sign(x - p.x) == 0 and sign(y - p.y) == 0; }
 
 	inline void print(){ cout<<x<<' '<<y<<'\n'; }
 };
