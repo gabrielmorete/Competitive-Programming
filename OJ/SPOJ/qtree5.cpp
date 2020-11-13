@@ -83,7 +83,7 @@ int get_sz(int v, int p){ // compute sizes of the subtress
 
 int get_ctrd(int v, int p, int szt){ // find centroid of a tree
 	for (auto u : adj[v])
-		if (u != p and !skip[u] and sz[v] > szt)
+		if (u != p and !skip[u] and sz[u] > szt)
 			return get_ctrd(u, v, szt);
 	return v;		
 }
