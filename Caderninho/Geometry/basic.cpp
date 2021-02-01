@@ -57,16 +57,20 @@ struct segment {
 	segment() {} segment(point _a, point _b): a(_a), b(_b) {}
 
 	bool contains(point p){ return sign((p-a)^(b-a)) == 0 and sign((p-a)*(b-a)) >= 0 and sign((p-b)*(a-b)) >= 0; }
+	
+	int ccw(point p){ return((b - a).ccw(p)); } // ccw  -1 left, 0 over, 1 right  of seg a->b
+
 	bool intsec(segment q){ segment p = *this;
-		if (p.contains(q.a) or p.contains(q.b) or q.contains(p.a) or q.contains(p.b)) return true;
+		if (p.contains(q.a) or p.contains(q.b) or q.contains(p.a) or q.contains(p.b))
+			return true;
 		return p.ccw(q.a-p.a)*p.ccw(q.b-p.a) == -1 and q.ccw(p.a-q.a)*q.ccw(p.b-q.a) == -1;	
 	}
-
-	int ccw(point p){ return((b - a).ccw(p - a)); } // ccw  1 left, 0 over, -1 right  of seg a->b
-
+	
 	coord len2(){ return (a - b).norm2(); }
+
 	coord dist(segment q){segment p = *this; 
 		return p.intsec(q)? 0 : min({p.dist(q.a), p.dist(q.b), q.dist(p.a), q.dist(p.b)});	}
+
 	coord dist(point p){
 		if (sign(((p - a) * (b - a))) >= 0 and sign((p - b) * (a - b)) >= 0)
 			return abs((p - a) ^ (b - a)) / (b - a).norm();
