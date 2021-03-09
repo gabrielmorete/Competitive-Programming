@@ -72,9 +72,9 @@ int32_t main(){
 			ans[i][str] = max(ans[i][str], sz);
 		}
 		else{
-			auto it = upper_bound(all(vv), v[i].fst); // primeiro cara maior
-			if (it != vv.end()){
-				int p = (int)(it - vv.begin());
+			auto it = upper_bound(all(v), make_pair(v[i].fst, 20)); // primeiro cara maior
+			if (it != v.end()){
+				int p = (int)(it - v.begin());
 				ans[i][str] = max(ans[i][str], ans[p][str + 1] + sz);
 			}	
 		}
