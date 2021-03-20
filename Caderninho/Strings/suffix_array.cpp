@@ -1,17 +1,16 @@
 // Algoritmo para suffix array
-//
-// complexidade : O(nlog(n))
+// complexidade : O(|texto|log(|texto|))
 
 #include "bits/stdc++.h"
 using namespace std;
 
-const int MAXN = 4e5 + 10;
+const int MAXN = 1e6 + 10; // tamanho máximo da string
 
 int p[MAXN], c[MAXN], c_new[MAXN], cnt[MAXN], cp[MAXN], lcp[MAXN];
 pair<int, int> a[MAXN];
 
 void count_sort(int n){
-	fill(cnt, cnt + n, 0);
+	fill(cnt, cnt + n + 1, 0);
 	for (int i = 0; i < n; i++)
 		cnt[c[i] + 1]++;
 	for (int i = 1; i < n; i++)
@@ -25,12 +24,13 @@ void count_sort(int n){
 		p[i] = cp[i];
 }
 
-// suffix array está em p, o suffixo vazio é incluido (p[0] = n)
+// O suffix a. está em p, o i-ésimo menor suffixo começa em na posição p[i]
+// o suffixo vazio está incluso (p[0] = n)
 void suffix_array(string &s){
 	int n = s.size() + 1;
 	for (int i = 0; i < n - 1; i++)
 		a[i] = {s[i], i};
-	a[n - 1] = {' ', n - 1}; // caractere 32
+	a[n - 1] = {' ', n - 1}; // caractere 32, menor legivel
 
 	sort(a, a + n);
 
@@ -61,10 +61,11 @@ void suffix_array(string &s){
 
 	k = 0;
 	for (int i = 0; i < n - 1; i++){ // calcula lcp
-		int pi = c[i]; // é a permutação inversa sufixo -> posição
+		int pi = c[i]; // permutação inversa, na posição i começa - c[i]-ésimo suffixo
 		int j = p[pi - 1];
 		while (s[i + k] == s[j + k]) k++;
-		lcp[pi - 1] = k; // lcp[i] é entre o sufixo p[i] -> p[i + 1]
+		lcp[pi - 1] = k; // lcp[i] é o maior prefixo entre os sufixos p[i] -> p[i + 1]
 		k = max(k - 1, 0);
 	}
 }
+
