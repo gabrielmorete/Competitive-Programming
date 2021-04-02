@@ -58,12 +58,11 @@ struct segment {
 
 	bool contains(point p){ return sign((p-a)^(b-a)) == 0 and sign((p-a)*(b-a)) >= 0 and sign((p-b)*(a-b)) >= 0; }
 	
-	int ccw(point p){ return((b - a).ccw(p)); } // ccw  -1 left, 0 over, 1 right  of seg a->b
+	int ccw(point p){ return((b - a).ccw(p - a)); } // ccw  1 left, 0 over, -1 right  of seg a->b
 
 	bool intsec(segment q){ segment p = *this;
-		if (p.contains(q.a) or p.contains(q.b) or q.contains(p.a) or q.contains(p.b))
-			return true;
-		return p.ccw(q.a-p.a)*p.ccw(q.b-p.a) == -1 and q.ccw(p.a-q.a)*q.ccw(p.b-q.a) == -1;	
+		if (p.contains(q.a) or p.contains(q.b) or q.contains(p.a) or q.contains(p.b)) return true;
+		return p.ccw(q.a) * p.ccw(q.b) == -1 and q.ccw(p.a) * q.ccw(p.b) == -1;	
 	}
 	
 	coord len2(){ return (a - b).norm2(); }
@@ -142,22 +141,4 @@ vector<point> get_intsec(segment p, segment q){ // returns intersection points/s
 			return {a, b};
 		}	
 		return {(p.getline()).get_intsec(q.getline())};
-}
-
-// check if a is conteined in polygon in O(log(n))
-bool pol_contain(vector<point> &pol, point a){ // pol must be in clockwise order
-	int r = pol.size() - 1, l = 1, meio;
-	while (r - l > 1){
-		meio = (r + l) / 2;
-		if (segment(pol[0], pol[meio]).ccw(a) >= 0) r = meio;
-		else l = meio;
-	}
-	if (r == l) return segment(pol[0], pol[r]).contains(a);
-	else{
-		coord a1 =	fabs((pol[r] - pol[0]) ^ (pol[l] - pol[0]));
-		coord a2 =	fabs((pol[r] - a) ^ (pol[l] - a)) +
-					fabs((pol[l] - a) ^ (pol[0] - a)) +
-					fabs((pol[0] - a) ^ (pol[r] - a));
-		return sign(a1 - a2) == 0;			
-	}
 }
