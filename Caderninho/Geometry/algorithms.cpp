@@ -12,7 +12,7 @@ struct comparator{
 	}
 };
 
-// build convex hull in nlog(n), n > 1
+// build convex hull in nlog(n), n > 1, hull is in reverse clockwise order
 vector<point> convex_hull(vector<point> v, int border_in){ // should border be in convex?
 	swap(v[0], *min_element(all(v))); // lex_sort
 	sort(v.begin() + 1, v.end(), comparator(v[0]));
