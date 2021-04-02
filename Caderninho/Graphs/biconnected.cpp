@@ -1,6 +1,11 @@
-// Algoritmo de Tarjan para componente biconexa
+// Algoritmo de Tarjan para componentes biconexas (bcc)
 // complexidade : O(V + E)
-// cuidado, as ligações entre componentes são vertices
+//
+// Dois vértices u e v estão na mesma bcc se há dois caminhos 
+// distintos que ligam u e v ou são vizinhos.
+// Cuidado, as ligações entre componentes são vertices de corte
+// vertices de corte podem estar em várias componentes
+// A árvore das componentes forma a block-cut-tree
 
 #include "bits/stdc++.h"
 using namespace std;
@@ -8,7 +13,7 @@ using namespace std;
 const int MAXN = 1e5 + 10;
 
 int n, m, clk, id; // id = # de componentes
-int pre[MAXN], lo[MAXN], bcc[MAXN]; // bcc[v] é a componente biconexa* de v
+int pre[MAXN], lo[MAXN], bcc[MAXN]; // bcc[v] é a componente biconexa de v
 stack< pair<int, int> > stk;
 vector<int> adj[MAXN];
 
@@ -48,7 +53,7 @@ int findbcc(){
 	fill(pre, pre + n + 1, -1);
 	fill(bcc, bcc + n + 1, -1);
 	clk = id = 0;
-	for (int v = 1; v <= n; v++) // indexado de um
+	for (int v = 0; v < n; v++) // o indexed
 		if (pre[v] == -1)
 			dfsbcc(v, v);
 		
