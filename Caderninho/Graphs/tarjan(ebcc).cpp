@@ -1,9 +1,9 @@
-// Algoritmo de Tarjan para componentes aresta-biconexas (bcc)
+// Algoritmo de Tarjan para componentes aresta-biconexas (ebcc)
 // complexidade : O(n + m)
 //
-// Dois vértices u e v estão na mesma bcc se há 
+// Dois vértices u e v estão na mesma ebcc se há 
 // dois caminhos sem arestas em comum que ligam u e v (repete vertice)
-// Toda bcc é conexa e toda aresta dessa pertence a algum circuito
+// Toda ebcc é conexa e toda aresta dessa pertence a algum circuito
 
 #include "bits/stdc++.h"
 using namespace std;
@@ -11,7 +11,7 @@ using namespace std;
 const int MAXN = 1e5 + 10;
 
 int n, m, sn, clk, id;
-int pre[MAXN], lo[MAXN], stk[MAXN], bcc[MAXN]; // bcc[v] é a componente biconexa de v
+int pre[MAXN], lo[MAXN], stk[MAXN], ebcc[MAXN]; // ebcc[v] é a componente biconexa de v
 vector< pair<int,int> > adj[MAXN], adjbcc[MAXN];
 
 void dfs_ebcc(int v, int p){
@@ -31,7 +31,7 @@ void dfs_ebcc(int v, int p){
 		int u;
 		do {
 			u = stk[--sn];
-			bcc[u] = id;
+			ebcc[u] = id;
 		} while (u != v);
 		id++;
 	}
@@ -51,7 +51,7 @@ int ebcc(){
 void build_ebcc_graph() {
 	for (int v = 0; v < n; v++)
 		for (auto x : adj[v])
-			if (bcc[v] != bcc[x.fst])
-				adjbcc[bcc[v]].push_back({bcc[x.fst], x.snd});
+			if (ebcc[v] != ebcc[x.fst])
+				adjbcc[ebcc[v]].push_back({ebcc[x.fst], x.snd});
 			// ponte vira uma aresta de mesmo custo na árvore
 }
