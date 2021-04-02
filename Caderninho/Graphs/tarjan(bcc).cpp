@@ -53,7 +53,7 @@ int findbcc(){
 	fill(pre, pre + n + 1, -1);
 	fill(bcc, bcc + n + 1, -1);
 	clk = id = 0;
-	for (int v = 0; v < n; v++) // o indexed
+	for (int v = 0; v < n; v++) // 0 indexed
 		if (pre[v] == -1)
 			dfsbcc(v, v);
 		
