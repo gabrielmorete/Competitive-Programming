@@ -37,7 +37,7 @@ void dfs_ebcc(int v, int p){
 	}
 }
 
-int ebcc(){
+int findebcc(){
 	fill(pre, pre + n + 1, -1);
 	sn = clk = id = 0;
 	for (int v = 0; v < n; v++) // 0 indexed
