@@ -1,35 +1,29 @@
-// Algoritmo para lca
-// usa sparse table, memo[v][i] é 
-// o acentral a distancia 2^i de v
+// Algoritmo para manor ancestral comum em arvore
 // complexidade:
-// build_lca O(nlog(n))
-// query_lca O(log(n))
+// 		build_lca O(nlog(n))
+// 		query_lca O(log(n))
 
-#include<bits/stdc++.h>
-const int MAXN = 1e5 + 10;
+const int MAXN = 5e5 + 10;
 const int LMAXN = 25; //log2(MAXN)
 
-int n, hgt[MAXN], memo[MAXN][LMAXN]; 
-bool vis[MAXN]; 
-vi adj[MAXN]; 
+// memo[v][i] é o acentral a distancia 2^i de v
+int hgt[MAXN], memo[MAXN][LMAXN]; 
+vector<int> adj[MAXN];
 
-void dfs_lca(int v){
-	vis[v] = 1; 
-	for (auto x : adj[v]){
-		if (vis[x]) 
-			continue;
-		hgt[x] = hgt[v] + 1; 
-		memo[x][0] = v; 
-		for (int i = 1; i < LMAXN; i++) 
-			memo[x][i] = memo[memo[x][i-1]][i-1];
-		dfs_lca(x);
-	}
+void dfs_lca(int v, int p){
+	for (auto x : adj[v])
+		if (x != p){ 
+			hgt[x] = hgt[v] + 1; 
+			memo[x][0] = v; 
+			for (int i = 1; i < LMAXN; i++) 
+				memo[x][i] = memo[memo[x][i - 1]][i - 1];
+			dfs_lca(x, v);
+		}
 }
 
-void build_lca(){
-	for (int i = 0; i < LMAXN; i++) 
-		memo[1][i]=1;
-	dfs_lca(1); 
+void build_lca(int r){ // enraizado em r
+	fill(memo[r], memo[r] + LMAXN, r);
+	dfs_lca(r, r); 
 }
 
 int find_lca(int a, int b){
