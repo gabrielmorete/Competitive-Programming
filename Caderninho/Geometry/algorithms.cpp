@@ -68,3 +68,27 @@ bool pol_contain(vector<point> &pol, point a){ // pol must be in clockwise order
 		return sign(a1 - a2) == 0;			
 	}
 }
+
+// Return the minimun squared distance for a set of points in nlog(n)
+vector<point> auxv; // auxiliary array
+coord closest_pair(vector<point> &v, int l, int r, int srt = 0){ // (array, 0, array.size())
+	if (l + 1 >= r) return 1e100; // [l, r)
+	if (!srt) sort(v.begin(), v.end()), auxv.resize(r); // lex_compare	
+	int meio = (l + r)/2;
+	coord x = v[meio].x;
+
+	coord h = min(closest_pair(v, l, meio, 1), closest_pair(v, meio, r, 1));
+	
+	auto cmp = [](point &a, point &b){ return a.y < b.y; };
+	merge(v.begin() + l, v.begin() + meio, v.begin() + meio, v.begin() + r, auxv.begin(), cmp);
+	copy(auxv.begin(), auxv.begin() + r - l, v.begin() + l);
+
+	int asz = 0;
+	for (int i = l; i < r; i++)
+		if (sign(sq(v[i].x - x) - h) <= 0){
+			for (int j = asz - 1; j >= 0 and sign(sq(v[i].y - auxv[j].y) - h) <= 0; j--)
+				h = min(h, (v[i] - auxv[j]).norm2());
+			auxv[asz++] = v[i];
+		}
+	return h;
+}
