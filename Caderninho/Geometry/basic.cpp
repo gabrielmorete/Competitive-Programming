@@ -67,10 +67,10 @@ struct segment {
 	
 	coord len2(){ return (a - b).norm2(); }
 
-	coord dist(segment q){segment p = *this; 
+	long double dist(segment q){segment p = *this; 
 		return p.intsec(q)? 0 : min({p.dist(q.a), p.dist(q.b), q.dist(p.a), q.dist(p.b)});	}
 
-	coord dist(point p){
+	long double dist(point p){
 		if (sign(((p - a) * (b - a))) >= 0 and sign((p - b) * (a - b)) >= 0)
 			return abs((p - a) ^ (b - a)) / (b - a).norm();
 		return min((p - a).norm(), (p - b).norm());
