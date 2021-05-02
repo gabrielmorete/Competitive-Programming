@@ -59,7 +59,7 @@ void suffix_array(string &s){
 		k++;
 	}
 
-	k = 0;
+	k = 0; lcp[n - 1] = 0;
 	for (int i = 0; i < n - 1; i++){ // calcula lcp
 		int pi = c[i]; // permutação inversa, na posição i começa - c[i]-ésimo suffixo
 		int j = p[pi - 1];
@@ -68,4 +68,3 @@ void suffix_array(string &s){
 		k = max(k - 1, 0);
 	}
 }
-
