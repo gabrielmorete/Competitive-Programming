@@ -15,19 +15,6 @@ int matchu[MAXN], matchv[MAXN], coverv[MAXN], coveru[MAXN];
 int vis[MAXN], iter;
 int m, n;
 
-bool dfs(int u){
-    vis[u] = iter;
-    if (u == 0) return true;
-   	for (int &v : adju[u]){
-        if (vis[matchv[v]] < iter and dfs(matchv[v])){
-            matchv[v] = u; 
-            matchu[u] = v;
-            return true;
-        }
-    }
-    return false;
-}
-
 void min_cover(){
 	iter++;
 	for (int u = 1; u <= m; u++)
@@ -45,18 +32,32 @@ void min_cover(){
 	}	
 }
 
+bool dfs(int u){
+	vis[u] = iter;
+	if (u == 0) return true;
+		for (int &v : adju[u]){
+			if (vis[matchv[v]] < iter and dfs(matchv[v])){
+				matchv[v] = u; 
+				matchu[u] = v;
+				return true;
+			}
+		}
+	return false;
+}
+
 int kuhn(){
-    memset(&matchu, 0, sizeof matchu);
-    memset(&matchv, 0, sizeof matchv);
- 	iter = 0;
-    int result = 0;
-    for (int u = 1; u <= m; u++){
-        iter++;
-        if (matchu[u] == 0 and dfs(u)) 
-        	result++;
-    }
-    min_cover();
-    return result;
+	memset(&matchu, 0, sizeof matchu);
+	memset(&matchv, 0, sizeof matchv);
+	memset(&vis, 0, sizeof vis);
+	iter = 0;
+	int result = 0;
+	for (int u = 1; u <= m; u++){
+		iter++;
+		if (matchu[u] == 0 and dfs(u)) 
+			result++;
+	}
+	min_cover();
+	return result;
 }
 
 // baseado em : https://github.com/splucs/Competitive-Programming/tree/master/Macac%C3%A1rio
