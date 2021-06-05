@@ -22,81 +22,43 @@ typedef vector<pii> vii;
 
 const int INF = 0x3f3f3f3f;
 const ll llINF = (long long)(1e18) + 100;   
-const int MAXN = 1e5 + 10;
+const int MAXN = 5e3 + 10;
+const ll mod = 1e9 + 7;
 
-using coord = long long;
-int sign(coord x){ return (x > 0) - (x < 0); }
+ll n, q, memo[MAXN][MAXN], sum[MAXN];
 
-struct point {
-	coord x, y;
-	point() : x(0), y(0) {} point(coord _x, coord _y): x(_x), y(_y) {}
-	inline point operator+(point p){ return {x + p.x, y + p.y}; }
-	inline point operator-(point p){ return {x - p.x, y - p.y}; }
-	inline point operator*(coord o){ return {x * o, y * o}; }
-	inline void operator=(point p){ x = p.x, y = p.y; }
+void pd(){
+	memo[1][0] = 1; // numero de permutações com n elementos tal que p_i > p_{i + 1} em k posições
 
-	inline coord operator*(point p){ return x * p.x + y * p.y; } // |a||b|cos(tht)
-	inline coord operator^(point p){ return x * p.y - y * p.x; } // |a||b|sin(tht), this -> p
-};
-
-int n;
-vector<point> v;
-
-ll area;
-
-
-ll diferenca(ll now, ll irc){
-	ll a = area - now;
-	ll b = now;
-
-	ll aa = area - (now + irc);
-	ll bb = now + irc;
-
-	return abs(a - b) > abs(aa - bb);
-}
-
-
-ll rotating(){
-	int l = 1, r = 2;
-
-	coord now = 0;
-	coord ans = 0;
-
-	for (int i = 0; i < n; i++){
-		ll irc = abs((v[l] - v[i]) ^ (v[r] - v[i])); // incremento
-	
-		while (diferenca(now, irc)){ // pode ser mais equilibrado
-			now += irc;
-			l = r;
-			r = (r + 1) % n;
-
-			irc = abs((v[l] - v[i]) ^ (v[r] - v[i]));
+	for (ll i = 2; i <= n; i++){
+		for (ll k = 0; k < i; k++){
+			memo[i][k] = (k + 1) * memo[i - 1][k] % mod;
+			if (k > 0)
+				memo[i][k] = (memo[i][k] + (i - k) * memo[i - 1][k - 1]) % mod;
 		}
-	
-		ans = max(ans, max(area - now, now));
-
-		now -= abs((v[l] - v[i]) ^ (v[l] - v[i + 1]));
 	}
 
-	return ans;
+	fr(i, n){
+		sum[i] = memo[n][i];
+		if (i > 0)
+			sum[i] = (sum[i] + sum[i - 1]) % mod;
+	}
+
 }
 
 int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-	cin>>n;
+	cin>>n>>q;
 
-	coord x, y;
-	fr(i, n){ // counter clockwise
-		cin>>x>>y;
-		v.pb(point(x, y));
+	pd();
+
+	ll x;
+	while (q--){
+		cin>>x;	
+		cout<<sum[min(x, n) - 1];
+		if (q)
+			cout<<' ';
 	}
+	gnl;
 
-	for (int i = 1; i < n - 1; i++)
-		area += (v[i] - v[0])^(v[i + 1] - v[0]);
-
-	area = abs(area);
-
-	ll ans = rotating();
-
-	cout<<max(area - ans, ans)<<' '<<min(area - ans, ans)<<endl;
 }
