@@ -2,6 +2,7 @@
 // Complexidade: O(nlog(n))
 // O caminho entre dois vértices da árvore passa pelo lca na
 // árvore de centroid. A árvore de centroid tem altura O(log(n)).
+// Percorrer toda as subárvores de todos os centroids é O(nlog(n))
 
 const int MAXN = 1e5 + 10;
 
