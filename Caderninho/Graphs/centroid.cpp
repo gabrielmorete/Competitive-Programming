@@ -26,7 +26,8 @@ int dfs_decomp(int v, int p = -1, int sz = -1){ // O(nlog(n))
 			return dfs_decomp(x, p, sz);
 		}
 	blk[v] = true;
-	pai[v] = (p == -1? v : p);	
+	pai[v] = (p == -1? v : p);
+	// achei um centroid, fazer algo na subarvore?	
 	for (auto x : adj[v])
 		if (!blk[x])
 			dfs_decomp(x, v);
