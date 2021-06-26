@@ -9,13 +9,14 @@ typedef long long int ll;
 
 const ll mod1 = 1000015553; // primo grande 1
 const ll mod2 = 1000028537; // primo grande 2
-// const ll mod3 = 1000041323; // primo grande 3 coisa ta feia
+// const ll mod3 = 1000041323; // primo grande 3, coisa ta feia
 
 mt19937 rng((int) chrono::steady_clock::now().time_since_epoch().count()); // Gerador aleatório
 static ll p = uniform_int_distribution<int>(27, mod1 - 1)(rng);	// Caso TL usa const p
+// Lembre que (alfabeto < p < mod)
 
 struct str_hash{
-	string s;
+	string s; // Se tem elemento zero, o hash é nulo hash(0) = hash(000...000)
 	ll n;
 	vector<ll> hsh1, pwr1, hsh2, pwr2;
 
