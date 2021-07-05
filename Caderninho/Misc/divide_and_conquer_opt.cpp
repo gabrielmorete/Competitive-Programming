@@ -25,7 +25,7 @@ void compute(ll l, ll r, ll optl, ll optr){// otimizada O(nmlong(m))
  
     ll mid = (l + r) >> 1;
  
-	ll vmid = llINF, opt = -1;
+	ll vmid = llINF, opt = optl;
     for (ll k = optl; k <= min(mid, optr); k++){
     	if (vmid > dp_before[k] + sum[mid] - sum[k] - (acum[mid] - acum[k]) * k){
     		vmid = dp_before[k] + sum[mid] - sum[k] - (acum[mid] - acum[k]) * k;
