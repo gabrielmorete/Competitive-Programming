@@ -1,6 +1,6 @@
 // Fenwick Tree
 // Computa o valor de uma função reversível no intervalo
-// Complexidade : O(log(bn)) (tudo)
+// Complexidade : O(log(n)) (tudas as operações)
 
 #include "bits/stdc++.h"
 using namespace std;
