@@ -20,7 +20,7 @@ struct fenwic{
 			bit[p] += val;		
 	}
 
-	void modfy(int r, int l, int val){ modfy(r + 1, -val); modfy(l, val);}
+	void modfy(int l, int r, int val){ modfy(l, val); modfy(r + 1, -val);}
 
 	int query(int p){
 		int res = 0;
