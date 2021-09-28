@@ -7,7 +7,7 @@ using namespace std;
 
 struct fenwic{
 	int n;
-	vector<ll> bit;
+	vector<int> bit;
 
 	fenwic (int _n){
 		n = _n + 1;
