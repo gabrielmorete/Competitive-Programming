@@ -6,10 +6,10 @@ const ll mod = 1e9 + 7;
 
 typedef vector< vector<ll> > matrix;
 
-matrix operator*(matrix a, matrix b){
+matrix operator*(matrix const &a, matrix const &b){
 	matrix c(a.size(), vector<ll>(b[0].size(), 0));
 	for (int i = 0; i < a.size(); i++)
-		for (int k = 0; k < b.size(); k++) // paginação do C, acelera o produto
+		for (int k = 0; k < b.size(); k++)
 			for (int j = 0; j < b[0].size(); j++)
 				c[i][j] = (c[i][j] + a[i][k] * b[k][j]) % mod;
 	return c;
