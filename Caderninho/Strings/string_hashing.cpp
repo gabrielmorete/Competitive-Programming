@@ -28,8 +28,8 @@ struct str_hash{
 		}
 		hsh1[0] = hsh2[0] = s[0];
 		for (int i = 1; i < n; i++){
-			hsh1[i] = (hsh1[i - 1] * p + (ll)(s[i]))%mod1;
-			hsh2[i] = (hsh2[i - 1] * p + (ll)(s[i]))%mod2;
+			hsh1[i] = (hsh1[i - 1] * p + (ll)(s[i] - 'a'))%mod1;
+			hsh2[i] = (hsh2[i - 1] * p + (ll)(s[i] - 'a'))%mod2;
 		}
 	}
 	pair<ll, ll> operator()(int i, int j){ // hash no intervalo [i, j]
