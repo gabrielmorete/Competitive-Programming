@@ -32,7 +32,7 @@ vector<point> convex_hull(vector<point> v, int border_in){ // should border be i
 	return hull;	
 }
 
-// find diameter of a polygon in O(n) n > 2
+// find diameter of a polygon in O(n) n > 2, no border
 pair<point, point> diameter_polygon(vector<point> v){
 	int l, r, p = 2, nv = v.size();
 	coord mxdst = 0;
