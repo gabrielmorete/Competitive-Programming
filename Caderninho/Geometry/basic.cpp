@@ -25,10 +25,10 @@ struct point {
 	inline long double norm(){ return hypot(x, y); }
 	inline coord norm2(){ return x * x + y * y; }
 
-	inline point rot90(){return {-y, x}; }
-	inline point rot(long double ang){ return {cos(ang) * x - sin(ang) * y, sin(ang) * x + cos(ang) * y}; }
+	inline void rot90(){*this = point(-y, x); }
+	inline void rot(long double ang){ *this = point(cos(ang) * x - sin(ang) * y, sin(ang) * x + cos(ang) * y); }
 	inline point project(point p){return p * (((*this) * p)/p.norm2()); }
-
+	
 	inline bool operator<(point &p){ return sign(x - p.x) != 0 ? sign(x - p.x) < 0 : sign(y - p.y) < 0; } // lex_sort
 	inline bool operator==(point p){ return sign(x - p.x) == 0 and sign(y - p.y) == 0; }
 
