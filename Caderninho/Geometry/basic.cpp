@@ -3,7 +3,7 @@ using namespace std;
 
 using coord = long double;
 const long double pi = acos(-1);
-const long double EPS = 1e-8;
+const coord EPS = 1e-8;
 
 int sign(coord x) { return (x > EPS) - (x < -EPS); }
 coord sq(coord x) { return x * x; }
@@ -25,8 +25,8 @@ struct point {
 	inline long double norm(){ return hypot(x, y); }
 	inline coord norm2(){ return x * x + y * y; }
 
-	inline void rot90(){*this = point(-y, x); }
-	inline void rot(long double ang){ *this = point(cos(ang) * x - sin(ang) * y, sin(ang) * x + cos(ang) * y); }
+	inline point rot90(){ *this = point(-y, x); return {x, y}; }
+	inline point rot(long double ang){ *this = point(cos(ang) * x - sin(ang) * y, sin(ang) * x + cos(ang) * y); return {x, y}; }
 	inline point project(point p){return p * (((*this) * p)/p.norm2()); }
 	
 	inline bool operator<(point &p){ return sign(x - p.x) != 0 ? sign(x - p.x) < 0 : sign(y - p.y) < 0; } // lex_sort
