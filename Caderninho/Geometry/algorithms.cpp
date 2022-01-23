@@ -6,6 +6,15 @@ struct comparator{
 	point o;
 	comparator(point _o): o(_o){}
 	bool operator()(point a, point b){
+		// a = a - o; // If o is not in que lower left corner
+		// b = b - o;
+		// if (a.x < 0 and b.x >= 0)
+		// 	return false;
+		// if (a.x >= 0 and b.x < 0)
+		// 	return true;
+		// if (a.x >= 0 and sign(a.y) != sign(b.y))
+		// 	return a.y < b.y;
+
 		if (sign((a - o) ^ (b - o)) != 0)
 			return sign((a - o) ^ (b - o)) > 0;
 		return sign((a - o).norm2() - (b - o).norm2()) < 0;
