@@ -1,3 +1,20 @@
+/*
+   Title: Edmond's blossom algorithm for maximum matching
+   Description: Computes the maximum matching in a general graph
+   Complexity:  blossom O(E(V**2))
+
+   Details: Only the adjacency of one side is needed.
+	Vetices numberd from 1 to m in U and from 1 to n in V.
+
+	Konig-Egervary's theo: In bip. graphs match(G) = cover(G);
+	Gallai ID1: Min cover is the complement of max stable set;
+	Gallai ID2: If not isolated vertices, Edge-cover(G) + match(G) = V.
+	Dilwoth's L: In a partial order |Largest antichain| = |Smmalest path cover| 
+
+   Credits: https://github.com/splucs/Competitive-Programming/tree/master/Macac%C3%A1rio
+*/
+
+
 // Edomonds Blosssom
 // acha máximo emparelhamento em grafos simples arbitrarios
 // complexidade : O(EV^2)
