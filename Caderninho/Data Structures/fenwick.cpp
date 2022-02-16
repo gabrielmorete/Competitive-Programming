@@ -5,9 +5,11 @@
 #include "bits/stdc++.h"
 using namespace std;
 
+using coord = ll;
+
 struct fenwic{
 	int n;
-	vector<int> bit;
+	vector<coord> bit;
 
 	fenwic (int _n){
 		n = _n + 1;
@@ -15,19 +17,19 @@ struct fenwic{
 		fill(bit.begin(), bit.end(), 0);
 	}
 
-	void modfy(int p, int val){
+	void modfy(int p, coord val){
 		for (p++; p <= n; p += (p & -p))
 			bit[p] += val;		
 	}
 
-	void modfy(int l, int r, int val){ modfy(l, val); modfy(r + 1, -val);}
+	void modfy(int l, int r, coord val){ modfy(l, val); modfy(r + 1, -val);}
 
-	int query(int p){
-		int res = 0;
+	coord query(int p){
+		coord res = 0;
 		for (p++; p > 0; p -= (p & -p))
 			res += bit[p];
 		return res;
 	}
 
-	int query(int l, int r){return query(r) - query(l - 1);}
+	coord query(int l, int r){return query(r) - query(l - 1);}
 };
