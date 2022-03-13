@@ -25,8 +25,8 @@ struct point {
 	inline long double norm(){ return hypot(x, y); }
 	inline coord norm2(){ return x * x + y * y; }
 
-	inline point rot90(){ *this = point(-y, x); return {x, y}; }
-	inline point rot(long double ang){ *this = point(cos(ang) * x - sin(ang) * y, sin(ang) * x + cos(ang) * y); return {x, y}; }
+	inline point rot90(){ return point(-y, x);}
+	inline point rot(long double ang){ return point(cos(ang) * x - sin(ang) * y, sin(ang) * x + cos(ang) * y); 		}
 	inline point project(point p){return p * (((*this) * p)/p.norm2()); }
 	
 	inline bool operator<(point &p){ return sign(x - p.x) != 0 ? sign(x - p.x) < 0 : sign(y - p.y) < 0; } // lex_sort
