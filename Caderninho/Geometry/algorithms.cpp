@@ -114,6 +114,22 @@ long double get_area(vector<point> &P){
 	return abs(area + (P[P.size() - 1]^P[0])) / 2.0;
 }
 
+coord max_manhattan(vector<point> &p){
+	coord mas, mad, mis, mid;
+	mis = mas = p[0].x + p[0].y;
+	mid = mad = p[0].x - p[0].y;
+
+	for (int i = 1; i < p.size(); i++){
+		mis = min(mis, p[i].x + p[i].y);
+		mas = max(mas, p[i].x + p[i].y);
+		mid = min(mid, p[i].x - p[i].y);
+		mad = max(mad, p[i].x - p[i].y);
+	}
+
+	return max(mas - mis, mad - mid);
+} // May be generalized to 3d, just use x+y+z, x+y-z, x-y+z, and x-y-z. Expand the formula
+
+
 // Retuns the polygon of the intersection of all halfplanes in nlog(n)
 // BE CAREFUL with the INF value for unbounded cases
 vector<point> halfp_intersect(vector<halfplane>& H) { 
