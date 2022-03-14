@@ -101,3 +101,58 @@ coord closest_pair(vector<point> &v, int l, int r, int srt = 0){ // (array, 0, a
 		}
 	return h;
 }
+
+//Get area of a general polygon, O(n)
+long double get_area(vector<point> &P){
+	if (P.size() < 3) 
+		return 0;
+
+	coord area = 0;
+	for (int i = 0; i + 1 < P.size(); i++)
+		area += P[i] ^ P[i + 1];
+
+	return abs(area + (P[P.size() - 1]^P[0])) / 2.0;
+}
+
+// Retuns the polygon of the intersection of all halfplanes in nlog(n)
+// BE CAREFUL with the INF value for unbounded cases
+vector<point> halfp_intersect(vector<halfplane>& H) { 
+	point box[4] = {point(INF, INF), point(-INF, INF), point(-INF, -INF), point(INF, -INF)};
+	// Build bounding box to deal with unbound cases
+	for (int i = 0; i < 4; i++)
+		H.push_back(halfplane (box[i], box[(i+1) % 4]));
+
+	// Sort and remove duplicates
+	sort(H.begin(), H.end());
+	H.erase(unique(H.begin(), H.end()), H.end());
+
+	deque<halfplane> dq;
+	int len = 0;
+	for (int i = 0; i < int(H.size()); i++){
+		while (len > 1 and H[i].out(inter(dq[len-1], dq[len-2])))
+			dq.pop_back(), len--;
+
+		while (len > 1 and H[i].out(inter(dq[0], dq[1])))
+			dq.pop_front(), len--;
+
+		dq.push_back(H[i]);
+		++len;
+	}
+
+	while (len > 2 and dq[0].out(inter(dq[len-1], dq[len-2])))
+		dq.pop_back(), len--;
+
+	while (len > 2 and dq[len-1].out(inter(dq[0], dq[1])))
+		dq.pop_front(), len--;
+
+	if (len < 3) 
+		return vector<point>(); // empty intersection
+
+	// Reconstruct the convex polygon from the remaining half-planes.
+	vector<point> ret(len);
+	for(int i = 0; i+1 < len; i++)
+		ret[i] = inter(dq[i], dq[i+1]);
+	ret.back() = inter(dq[len-1], dq[0]);
+
+	return ret;
+}

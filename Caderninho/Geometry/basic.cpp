@@ -79,6 +79,30 @@ struct segment {
 	line getline(){return line(a, b); }
 };
 
+struct halfplane{ // Notice, te halfplane is to the left of d
+	point p, d; // point and direction, valid points to the left of the plane
+	long double ang;
+	halfplane() {} halfplane(point _a, point _b) : p(_a), d(_b - _a){
+		ang = atan2l(d.x, d.y);
+	}
+
+	// Check if a point is outside the halfplane (notice that inline is out)
+	bool out(point o){ return sign(d^(o - p)) < 0; }
+
+	inline bool operator<(halfplane &e){ 
+        if (sign(ang - e.ang) == 0) 
+        	return  (d ^ (e.p - p)) < 0;
+        return ang < e.ang;
+    } 
+
+    inline bool operator==(const halfplane& e) const { return sign(ang - e.ang) == 0; }
+
+    friend point inter(halfplane& s, halfplane& t){ // Intersection point of two non-parallel halfplanes
+        long double alpha = ((t.p - s.p) ^ t.d) / (s.d ^ t.d);
+        return s.p + (s.d * alpha);
+    }
+};
+
 struct circle{
 	point c; coord r;
 	circle() {} circle(point _c, coord _r): c(_c), r(_r) {}
