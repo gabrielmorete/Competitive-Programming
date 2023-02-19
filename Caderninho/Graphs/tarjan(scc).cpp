@@ -41,7 +41,7 @@ int findscc(){
 	return id;	
 }
 
-// constoi arvore das scc
+// constoi DAG das scc
 void build_scc_graph(){
 	for (int v = 0; v < n; v++)
 		for (auto x : adj[v])
